@@ -114,3 +114,20 @@ end
    <%= submit_tag("Search", class: "btn btn-primary") %>
 <% end %>
 ....
+
+##Step 3.  Add Stimulus
+
+# shell 
+rails webpacker:install:stimulus
+
+#shell 
+touch app/javascript/controllers/search_controller.js
+
+#app/javascript/controllers/search_controller.js
+import { Controller } from 'stimulus';
+
+export default class extends Controller {
+  connect() {
+    console.log("hello from stimulus")
+  }
+}
