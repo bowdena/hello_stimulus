@@ -78,3 +78,39 @@ end
 
 bowdena:~/environment/rails_apps/hello_stimulus-search (master) $ rake db:seed
 
+##Step 2.  Add the search
+
+#Gemfile 
+gem 'pg_search'
+
+#shell 
+bundle install
+
+#app/models/cocktail.rb
+
+include PgSearch::Model
+
+pg_search_scope :global_search,
+    against: [:name, :glass, :preparation],
+  using: {
+    tsearch: { prefix: true }
+}
+
+#app/controllers/cocktails_controller.rb
+
+def index
+  if params[:query].present?
+    @cocktails = Cocktail.global_search(params[:query])
+  else
+    @cocktails = Cocktail.all
+  end
+end
+
+#app/views/cocktails/index.html.erb
+....
+ <%= form_with(url: "/", method: :get) do |f| %>
+   <%= label_tag(:query, "Search for") %>
+   <%= text_field_tag(:query) %>
+   <%= submit_tag("Search", class: "btn btn-primary") %>
+<% end %>
+....
